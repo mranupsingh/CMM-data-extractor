@@ -1,0 +1,575 @@
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.action_chains import ActionChains
+import time
+
+# -------- CONFIG ----------
+CHROMEDRIVER_PATH = "chromedriver.exe"
+LOGIN_URL = "https://roams.cris.org.in/uaa/login"
+USERNAME = "90044"
+PASSWORD = "PL@40"
+HOLD_SECONDS = 10
+# --------------------------
+
+service = Service(executable_path=CHROMEDRIVER_PATH)
+driver = webdriver.Chrome(service=service)
+
+driver.get(LOGIN_URL)
+
+# Wait for username field and login button
+wait = WebDriverWait(driver, 20)  # Reduced wait time
+wait.until(EC.presence_of_element_located((By.ID, "username")))
+driver.find_element(By.ID, "username").send_keys(USERNAME)
+driver.find_element(By.ID, "password").send_keys(PASSWORD)
+
+# Locate and click login button
+login_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'Log In') or contains(text(), 'लॉग इन')]")))
+driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", login_button)
+actions = ActionChains(driver)
+actions.click_and_hold(login_button).perform()
+time.sleep(HOLD_SECONDS)
+actions.release().perform()
+
+# Final login click after captcha resolution
+login_button.click()
+
+# Wait for post-login element (check successful login)
+wait.until(EC.presence_of_element_located((By.XPATH, "/html/body/div[1]/div[2]/div/div/div/a")))
+
+# Click on 'Coaching Maintenance Management System' link
+cmms_link = wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[1]/div[2]/div/div/div/a")))
+cmms_link.click()
+
+# Wait for OTP input field, then allow the user to input OTP manually
+otp_input_xpath = '//*[@id="otpForm"]/div/input[4]'  # Replace with actual OTP input field XPath
+wait.until(EC.presence_of_element_located((By.XPATH, otp_input_xpath)))
+time.sleep(10)  # Give time for user to manually input OTP
+
+# Click 'Verify OTP' button
+verify_button_xpath = '//*[@id="saveButton"]'
+verify_button = wait.until(EC.element_to_be_clickable((By.XPATH, verify_button_xpath)))
+verify_button.click()
+
+#-------------------------------
+coach_mentainance_button_xpath = '//*[@id="navbarDropdownMenuDepotLink"]'
+coach_mentainance_button = wait.until(EC.element_to_be_clickable((By.XPATH, coach_mentainance_button_xpath)))
+coach_mentainance_button.click()
+
+coach_pro_button_xpath = '//*[@id="navbarTogglerCmm"]/ul/li[3]/div/a[1]'
+coach_pro_button = wait.until(EC.element_to_be_clickable((By.XPATH, coach_pro_button_xpath)))
+coach_pro_button.click()
+
+driver.find_element(By.ID, "coachNo").send_keys('199771')
+
+coach_go_xpath = '/html/body/div/div[3]/form/div/table/tbody/tr[1]/td[5]/button'
+coach_go = wait.until(EC.element_to_be_clickable((By.XPATH, coach_go_xpath)))
+coach_go.click()
+
+found_coach_xpath = '/html/body/div/div[3]/form/div/table/tbody/tr[2]/td[2]/a/span'
+found_coach = wait.until(EC.element_to_be_clickable((By.XPATH, found_coach_xpath)))
+found_coach.click()
+
+wait = WebDriverWait(driver, 20) # HOLD TIME 
+
+first_data = wait.until(EC.presence_of_element_located((By.XPATH, "/html/body/div/div[3]/div[1]/div/div[1]/div[2]")))
+first_d = first_data.text
+print("Extracted Text:", first_d)
+
+second_data = wait.until(EC.presence_of_element_located((By.XPATH, "/html/body/div/div[3]/div[1]/div/div[6]/div[4]")))
+second_d = second_data.text
+print("Extracted Text:", second_d)
+
+Third_data = wait.until(EC.presence_of_element_located((By.XPATH, "/html/body/div/div[3]/div[2]/div/div[2]/div[4]")))
+Third_d = Third_data.text
+print("Extracted Text:", Third_d)
+
+Forth_data = wait.until(EC.presence_of_element_located((By.XPATH, "/html/body/div/div[3]/div[1]/div/div[2]/div[4]")))
+Forth_d = Forth_data.text
+print("Extracted Text:", Forth_d)
+
+Fifth_data = wait.until(EC.presence_of_element_located((By.XPATH, "/html/body/div/div[3]/div[2]/div/div[3]/div[4]")))
+Fifth_d = Fifth_data.text
+print("Extracted Text:", Fifth_d)
+
+Sixth_data = wait.until(EC.presence_of_element_located((By.XPATH, "/html/body/div/div[3]/div[1]/div/div[2]/div[2]")))
+Sixth_d = Sixth_data.text
+print("Extracted Text:", Sixth_d)
+
+# Close the browser after a short pause
+time.sleep(5)
+driver.quit()
+
+
+----------------------------------------------------------------------------------------
+
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.action_chains import ActionChains
+import time
+
+# -------- CONFIG ----------
+CHROMEDRIVER_PATH = "chromedriver.exe"
+LOGIN_URL = "https://roams.cris.org.in/uaa/login"
+USERNAME = "9004441529"
+PASSWORD = "PL@40028pl"
+HOLD_SECONDS = 10
+# --------------------------
+
+# Initialize WebDriver
+service = Service(executable_path=CHROMEDRIVER_PATH)
+driver = webdriver.Chrome(service=service)
+
+# Open the login URL
+driver.get(LOGIN_URL)
+
+# Wait for the username field to appear
+wait = WebDriverWait(driver, 20)  # Wait up to 20 seconds
+wait.until(EC.presence_of_element_located((By.ID, "username")))
+
+# Fill in login credentials
+driver.find_element(By.ID, "username").send_keys(USERNAME)
+driver.find_element(By.ID, "password").send_keys(PASSWORD)
+
+# Locate and click the login button
+login_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'Log In') or contains(text(), 'लॉग इन')]")))
+driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", login_button)
+actions = ActionChains(driver)
+actions.click_and_hold(login_button).perform()
+time.sleep(HOLD_SECONDS)  # Hold for some time
+actions.release().perform()
+
+# Final click after CAPTCHA resolution (assuming manual input)
+login_button.click()
+
+# Wait for successful login (check for an element post-login)
+wait.until(EC.presence_of_element_located((By.XPATH, "/html/body/div[1]/div[2]/div/div/div/a")))
+
+# Navigate to Coaching Maintenance Management System
+cmms_link = wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[1]/div[2]/div/div/div/a")))
+cmms_link.click()
+
+# Wait for OTP input field, then allow the user to input OTP manually
+otp_input_xpath = '//*[@id="otpForm"]/div/input[4]'  # XPath for OTP input
+wait.until(EC.presence_of_element_located((By.XPATH, otp_input_xpath)))
+time.sleep(10)  # Wait for OTP input
+
+# Verify OTP after user input
+verify_button_xpath = '//*[@id="saveButton"]'
+verify_button = wait.until(EC.element_to_be_clickable((By.XPATH, verify_button_xpath)))
+verify_button.click()
+
+# Navigate to coach maintenance system
+coach_maintenance_button_xpath = '//*[@id="navbarDropdownMenuDepotLink"]'
+coach_maintenance_button = wait.until(EC.element_to_be_clickable((By.XPATH, coach_maintenance_button_xpath)))
+driver.execute_script("arguments[0].scrollIntoView(true);", coach_maintenance_button)
+coach_maintenance_button.click()
+
+# Navigate to coach profile
+coach_pro_button_xpath = '//*[@id="navbarTogglerCmm"]/ul/li[3]/div/a[1]'
+
+# Wait for the coach profile button to be clickable
+coach_pro_button = wait.until(EC.element_to_be_clickable((By.XPATH, coach_pro_button_xpath)))
+driver.execute_script("arguments[0].scrollIntoView(true);", coach_pro_button)
+coach_pro_button.click()
+
+# Search for the coach by number
+driver.find_element(By.ID, "coachNo").send_keys('224466')
+
+# Click the "Go" button to search
+coach_go_xpath = '/html/body/div/div[3]/form/div/table/tbody/tr[1]/td[5]/button'
+coach_go = wait.until(EC.element_to_be_clickable((By.XPATH, coach_go_xpath)))
+driver.execute_script("arguments[0].scrollIntoView(true);", coach_go)
+coach_go.click()
+
+# Wait for the coach link and click it
+found_coach_xpath = '/html/body/div/div[3]/form/div/table/tbody/tr[2]/td[2]/a/span'
+found_coach = wait.until(EC.element_to_be_clickable((By.XPATH, found_coach_xpath)))
+found_coach.click()
+
+# Define the XPaths and corresponding labels
+data_xpaths = [
+    ("/html/body/div/div[3]/div[1]/div/div[1]/div[2]", "First Data"),
+    ("/html/body/div/div[3]/div[1]/div/div[6]/div[4]", "Second Data"),
+    ("/html/body/div/div[3]/div[2]/div/div[2]/div[4]", "Third Data"),
+    ("/html/body/div/div[3]/div[1]/div/div[2]/div[4]", "Forth Data"),
+    ("/html/body/div/div[3]/div[2]/div/div[3]/div[4]", "Fifth Data"),
+    ("/html/body/div/div[3]/div[1]/div/div[2]/div[2]", "Sixth Data")
+]
+
+# Loop through XPaths and extract data
+for xpath, label in data_xpaths:
+    try:
+        # Wait for the element and extract its text
+        data_element = wait.until(EC.presence_of_element_located((By.XPATH, xpath)))
+        print(f"{label}: {data_element.text}")
+    except Exception as e:
+        print(f"An error occurred while extracting {label}: {e}")
+
+# Close the browser after a short pause
+time.sleep(5)
+driver.quit()
+
+06/11/2025 latest
+--------------------------------------------------------------------------------------------------
+
+
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.action_chains import ActionChains
+import time
+
+# -------- CONFIG ----------
+CHROMEDRIVER_PATH = "chromedriver.exe"
+LOGIN_URL = "https://roams.cris.org.in/uaa/login"
+USERNAME = "9004441529"
+PASSWORD = "PL@40028pl"
+HOLD_SECONDS = 10  # Hold time before clicking the login button
+# --------------------------
+
+# Define the coach numbers you want to search
+coach_numbers = ['224511', '224459', '224458']  # Add your desired coach numbers here
+
+# Initialize WebDriver
+service = Service(executable_path=CHROMEDRIVER_PATH)
+driver = webdriver.Chrome(service=service)
+
+# Maximize the Chrome window
+driver.maximize_window()
+
+# -------- LOGIN AND NAVIGATION --------
+def login_and_navigate():
+    # Open the login URL
+    driver.get(LOGIN_URL)
+
+    # Wait for the username field to appear
+    wait = WebDriverWait(driver, 20)  # Wait up to 20 seconds
+    wait.until(EC.presence_of_element_located((By.ID, "username")))
+
+    # Fill in login credentials
+    driver.find_element(By.ID, "username").send_keys(USERNAME)
+    driver.find_element(By.ID, "password").send_keys(PASSWORD)
+
+    # Locate and click the login button
+    login_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'Log In') or contains(text(), 'लॉग इन')]")))
+    driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", login_button)
+    
+    actions = ActionChains(driver)
+    actions.click_and_hold(login_button).perform()  # Hold the button
+    time.sleep(HOLD_SECONDS)  # Hold for some time (as in the original code)
+    actions.release().perform()
+
+    # Final click after CAPTCHA resolution (assuming manual input)
+    login_button.click()
+
+    # Wait for successful login (check for an element post-login)
+    wait.until(EC.presence_of_element_located((By.XPATH, "/html/body/div[1]/div[2]/div/div/div/a")))
+
+    # Navigate to Coaching Maintenance Management System
+    cmms_link = wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[1]/div[2]/div/div/div/a")))
+    cmms_link.click()
+
+    # Wait for OTP input field, then allow the user to input OTP manually
+    otp_input_xpath = '//*[@id="otpForm"]/div/input[4]'  # XPath for OTP input
+    wait.until(EC.presence_of_element_located((By.XPATH, otp_input_xpath)))
+    time.sleep(10)  # Wait for OTP input
+
+    # Verify OTP after user input
+    verify_button_xpath = '//*[@id="saveButton"]'
+    verify_button = wait.until(EC.element_to_be_clickable((By.XPATH, verify_button_xpath)))
+    verify_button.click()
+
+    # Navigate to coach maintenance system
+    coach_maintenance_button_xpath = '//*[@id="navbarDropdownMenuDepotLink"]'
+    coach_maintenance_button = wait.until(EC.element_to_be_clickable((By.XPATH, coach_maintenance_button_xpath)))
+    driver.execute_script("arguments[0].scrollIntoView(true);", coach_maintenance_button)
+    coach_maintenance_button.click()
+
+    # Navigate to coach profile
+    coach_pro_button_xpath = '//*[@id="navbarTogglerCmm"]/ul/li[3]/div/a[1]'
+
+    # Wait for the coach profile button to be clickable
+    coach_pro_button = wait.until(EC.element_to_be_clickable((By.XPATH, coach_pro_button_xpath)))
+    driver.execute_script("arguments[0].scrollIntoView(true);", coach_pro_button)
+    coach_pro_button.click()
+
+    return wait  # Return the wait object for further use
+
+# Function to search for a coach and extract data
+def search_coach(wait, coach_no):
+    try:
+        # Ensure we are on the correct page with the input field
+        wait.until(EC.presence_of_element_located((By.ID, "coachNo")))  # Wait for the coachNo input field to be available
+
+        # Clear the input field and enter the new coach number
+        coach_input_field = driver.find_element(By.ID, "coachNo")
+        coach_input_field.clear()  # Clear the field if there is any pre-existing data
+        coach_input_field.send_keys(coach_no)  # Enter the new coach number
+
+        # Click the "Go" button to search for the coach
+        coach_go_xpath = '/html/body/div/div[3]/form/div/table/tbody/tr[1]/td[5]/button'
+        coach_go = wait.until(EC.element_to_be_clickable((By.XPATH, coach_go_xpath)))
+        driver.execute_script("arguments[0].scrollIntoView(true);", coach_go)
+        coach_go.click()
+
+        # Wait for the coach link and click it
+        found_coach_xpath = '/html/body/div/div[3]/form/div/table/tbody/tr[2]/td[2]/a/span'
+        found_coach = wait.until(EC.element_to_be_clickable((By.XPATH, found_coach_xpath)))
+        found_coach.click()
+
+        # Define the XPaths and corresponding labels (updated)
+        data_xpaths = [
+            ("/html/body/div/div[3]/div[1]/div/div[1]/div[2]", "Coach Number"),
+            ("/html/body/div/div[3]/div[1]/div/div[6]/div[4]", "Commission Date"),
+            ("/html/body/div/div[3]/div[2]/div/div[2]/div[4]", "Manufactured By"),
+            ("/html/body/div/div[3]/div[1]/div/div[2]/div[4]", "Built Date"),
+            ("/html/body/div/div[3]/div[2]/div/div[3]/div[4]", "Return Date"),
+            ("/html/body/div/div[3]/div[1]/div/div[2]/div[2]", "Base Depot")
+        ]
+
+        # Loop through XPaths and extract data for the current coach number
+        for xpath, label in data_xpaths:
+            try:
+                # Wait for the element and extract its text
+                data_element = wait.until(EC.presence_of_element_located((By.XPATH, xpath)))
+                print(f"Coach Number {coach_no} - {label}: {data_element.text}")
+            except Exception as e:
+                print(f"An error occurred while extracting {label} for Coach {coach_no}: {e}")
+
+        # Optional: Sleep between coach searches to avoid too fast requests
+        time.sleep(3)
+
+    except Exception as e:
+        print(f"An error occurred while searching for Coach {coach_no}: {e}")
+    
+    # After retrieving the data, go back to "Coach Maintenance" and "Coach Profile" for the next coach
+    # Navigate back to Coach Maintenance
+    coach_maintenance_button_xpath = '//*[@id="navbarDropdownMenuDepotLink"]'
+    coach_maintenance_button = wait.until(EC.element_to_be_clickable((By.XPATH, coach_maintenance_button_xpath)))
+    driver.execute_script("arguments[0].scrollIntoView(true);", coach_maintenance_button)
+    coach_maintenance_button.click()
+
+    # Navigate back to Coach Profile
+    coach_pro_button_xpath = '//*[@id="navbarTogglerCmm"]/ul/li[3]/div/a[1]'
+    coach_pro_button = wait.until(EC.element_to_be_clickable((By.XPATH, coach_pro_button_xpath)))
+    driver.execute_script("arguments[0].scrollIntoView(true);", coach_pro_button)
+    coach_pro_button.click()
+
+    # Wait for the coach number input field to be ready again for the next search
+    wait.until(EC.presence_of_element_located((By.ID, "coachNo")))
+
+# -------- MAIN SCRIPT --------
+# Perform the login and navigate once
+wait = login_and_navigate()
+
+# Now loop through the coach numbers and search for them
+for coach_no in coach_numbers:
+    search_coach(wait, coach_no)
+
+# After completing all searches, close the browser
+driver.quit()
+
+--------------------------------------------------------------------------------06/11/2025 08:34
+
+
+
+import pandas as pd
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.action_chains import ActionChains
+import time
+
+# -------- CONFIG ----------
+CHROMEDRIVER_PATH = "chromedriver.exe"
+LOGIN_URL = "https://roams.cris.org.in/uaa/login"
+USERNAME = "9004441529"
+PASSWORD = "PL@40028pl"
+HOLD_SECONDS = 10  # Hold time before clicking the login button
+# --------------------------
+
+# -------- Read Coach Numbers from Excel --------
+def read_coach_numbers(file_path):
+    # Read the Excel file
+    df = pd.read_excel(file_path)
+
+    # Assuming the coach numbers are in the first column
+    coach_numbers = df.iloc[:, 0].tolist()  # Get the list of coach numbers
+    return coach_numbers
+
+# -------- LOGIN AND NAVIGATION --------
+def login_and_navigate(driver):
+    # Open the login URL
+    driver.get(LOGIN_URL)
+
+    # Wait for the username field to appear
+    wait = WebDriverWait(driver, 20)  # Wait up to 20 seconds
+    wait.until(EC.presence_of_element_located((By.ID, "username")))
+
+    # Fill in login credentials
+    driver.find_element(By.ID, "username").send_keys(USERNAME)
+    driver.find_element(By.ID, "password").send_keys(PASSWORD)
+
+    # Locate and click the login button
+    login_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'Log In') or contains(text(), 'लॉग इन')]")))
+    driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", login_button)
+    
+    actions = ActionChains(driver)
+    actions.click_and_hold(login_button).perform()  # Hold the button
+    time.sleep(HOLD_SECONDS)  # Hold for some time (as in the original code)
+    actions.release().perform()
+
+    # Final click after CAPTCHA resolution (assuming manual input)
+    login_button.click()
+
+    # Wait for successful login (check for an element post-login)
+    wait.until(EC.presence_of_element_located((By.XPATH, "/html/body/div[1]/div[2]/div/div/div/a")))
+
+    # Navigate to Coaching Maintenance Management System
+    cmms_link = wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[1]/div[2]/div/div/div/a")))
+    cmms_link.click()
+
+    # Wait for OTP input field, then allow the user to input OTP manually
+    otp_input_xpath = '//*[@id="otpForm"]/div/input[4]'  # XPath for OTP input
+    wait.until(EC.presence_of_element_located((By.XPATH, otp_input_xpath)))
+    time.sleep(10)  # Wait for OTP input
+
+    # Verify OTP after user input
+    verify_button_xpath = '//*[@id="saveButton"]'
+    verify_button = wait.until(EC.element_to_be_clickable((By.XPATH, verify_button_xpath)))
+    verify_button.click()
+
+    # Navigate to coach maintenance system
+    coach_maintenance_button_xpath = '//*[@id="navbarDropdownMenuDepotLink"]'
+    coach_maintenance_button = wait.until(EC.element_to_be_clickable((By.XPATH, coach_maintenance_button_xpath)))
+    driver.execute_script("arguments[0].scrollIntoView(true);", coach_maintenance_button)
+    coach_maintenance_button.click()
+
+    # Navigate to coach profile
+    coach_pro_button_xpath = '//*[@id="navbarTogglerCmm"]/ul/li[3]/div/a[1]'
+
+    # Wait for the coach profile button to be clickable
+    coach_pro_button = wait.until(EC.element_to_be_clickable((By.XPATH, coach_pro_button_xpath)))
+    driver.execute_script("arguments[0].scrollIntoView(true);", coach_pro_button)
+    coach_pro_button.click()
+
+    return wait  # Return the wait object for further use
+
+# Function to search for a coach and extract data
+def search_coach(wait, coach_no):
+    coach_data = {}  # Dictionary to store coach data
+    try:
+        # Ensure we are on the correct page with the input field
+        wait.until(EC.presence_of_element_located((By.ID, "coachNo")))  # Wait for the coachNo input field to be available
+
+        # Clear the input field and enter the new coach number
+        coach_input_field = driver.find_element(By.ID, "coachNo")
+        coach_input_field.clear()  # Clear the field if there is any pre-existing data
+        coach_input_field.send_keys(coach_no)  # Enter the new coach number
+
+        # Click the "Go" button to search for the coach
+        coach_go_xpath = '/html/body/div/div[3]/form/div/table/tbody/tr[1]/td[5]/button'
+        coach_go = wait.until(EC.element_to_be_clickable((By.XPATH, coach_go_xpath)))
+        driver.execute_script("arguments[0].scrollIntoView(true);", coach_go)
+        coach_go.click()
+
+        # Wait for the coach link and click it
+        found_coach_xpath = '/html/body/div/div[3]/form/div/table/tbody/tr[2]/td[2]/a/span'
+        found_coach = wait.until(EC.element_to_be_clickable((By.XPATH, found_coach_xpath)))
+        found_coach.click()
+
+        # Define the XPaths and corresponding labels (updated)
+        data_xpaths = [
+            ("/html/body/div/div[3]/div[1]/div/div[1]/div[2]", "Coach Number"),
+            ("/html/body/div/div[3]/div[1]/div/div[6]/div[4]", "Commission Date"),
+            ("/html/body/div/div[3]/div[2]/div/div[2]/div[4]", "Manufactured By"),
+            ("/html/body/div/div[3]/div[1]/div/div[2]/div[4]", "Built Date"),
+            ("/html/body/div/div[3]/div[2]/div/div[3]/div[4]", "Return Date"),
+            ("/html/body/div/div[3]/div[1]/div/div[2]/div[2]", "Base Depot")
+        ]
+
+        # Loop through XPaths and extract data for the current coach number
+        for xpath, label in data_xpaths:
+            try:
+                # Wait for the element and extract its text
+                data_element = wait.until(EC.presence_of_element_located((By.XPATH, xpath)))
+                coach_data[label] = data_element.text
+            except Exception as e:
+                print(f"An error occurred while extracting {label} for Coach {coach_no}: {e}")
+                coach_data[label] = None  # Handle missing data
+
+        # Optional: Sleep between coach searches to avoid too fast requests
+        time.sleep(3)
+
+    except Exception as e:
+        print(f"An error occurred while searching for Coach {coach_no}: {e}")
+    
+    # After retrieving the data, go back to "Coach Maintenance" and "Coach Profile" for the next coach
+    # Navigate back to Coach Maintenance
+    coach_maintenance_button_xpath = '//*[@id="navbarDropdownMenuDepotLink"]'
+    coach_maintenance_button = wait.until(EC.element_to_be_clickable((By.XPATH, coach_maintenance_button_xpath)))
+    driver.execute_script("arguments[0].scrollIntoView(true);", coach_maintenance_button)
+    coach_maintenance_button.click()
+
+    # Navigate back to Coach Profile
+    coach_pro_button_xpath = '//*[@id="navbarTogglerCmm"]/ul/li[3]/div/a[1]'
+    coach_pro_button = wait.until(EC.element_to_be_clickable((By.XPATH, coach_pro_button_xpath)))
+    driver.execute_script("arguments[0].scrollIntoView(true);", coach_pro_button)
+    coach_pro_button.click()
+
+    # Wait for the coach number input field to be ready again for the next search
+    wait.until(EC.presence_of_element_located((By.ID, "coachNo")))
+
+    return coach_data  # Return the dictionary with the extracted data
+
+# -------- MAIN SCRIPT --------
+# Initialize WebDriver
+service = Service(executable_path=CHROMEDRIVER_PATH)
+driver = webdriver.Chrome(service=service)
+
+# Maximize the Chrome window
+driver.maximize_window()
+
+# Read the coach numbers from an Excel file
+coach_numbers = read_coach_numbers("coach_numbers.xlsx")  # Change the path if needed
+
+# Perform the login and navigate once
+wait = login_and_navigate(driver)
+
+# List to store all the coach data
+all_coach_data = []
+
+# Now loop through the coach numbers and search for them
+for coach_no in coach_numbers:
+    coach_data = search_coach(wait, coach_no)
+    all_coach_data.append(coach_data)  # Append the extracted data to the list
+
+# Create a DataFrame from the collected coach data
+df = pd.DataFrame(all_coach_data)
+
+# Save the DataFrame to an Excel file in the current directory
+df.to_excel('coach_data.xlsx', index=False)
+
+# Close the browser after finishing
+driver.quit()
+
+#--------------------------------------------------------------------06/11 10:00PM
+
+=IFERROR(
+    IF(LEN(TEXTJOIN("",TRUE,IF(ISNUMBER(MID(A2,ROW(INDIRECT("1:"&LEN(A2))),1)*1),MID(A2,ROW(INDIRECT("1:"&LEN(A2))),1),"")))=5,
+        "0"&TEXTJOIN("",TRUE,IF(ISNUMBER(MID(A2,ROW(INDIRECT("1:"&LEN(A2))),1)*1),MID(A2,ROW(INDIRECT("1:"&LEN(A2))),1),"")),
+        TEXTJOIN("",TRUE,IF(ISNUMBER(MID(A2,ROW(INDIRECT("1:"&LEN(A2))),1)*1),MID(A2,ROW(INDIRECT("1:"&LEN(A2))),1),""))
+    ),
+"")
+
+EXCEL FORMULA 

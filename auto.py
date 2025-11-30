@@ -9,6 +9,7 @@ from selenium.common.exceptions import TimeoutException, StaleElementReferenceEx
 import time
 import sys
 import os
+from datetime import datetime, timedelta
 
 # -------- Intro of P-schedule --------------------
 
@@ -187,11 +188,27 @@ def search_coach(driver, wait, coach_no, max_retries=3):
     coach_data = {
         "Coach Number": coach_no,
         "Status": "Unprocessed",
-        "Commission Date": "N/A",
-        "Manufactured By": "N/A",
+        "Coach Type": "N/A",
         "Built Date": "N/A",
+        "Gauge": "N/A",
+        "Coupling Type": "N/A",
+        "Tare Weight": "N/A",
+        "Commission Date(DD/MM/YYYY": "N/A",
+        "Base Depot": "N/A",
+        "Coach Category": "N/A",
+        "Fitness Type": "N/A",
+        "Max Speed": "N/A",
+        "Factory TurnOut Date": "N/A",
+        "Maintenance Zone": "N/A",
+        "Last POH/SS2/SS3 Workshop": "N/A",
+        "POH/SS2/SS3 Date": "N/A",
+        "IOH/SS1 Date": "N/A",
+        "Expected IOH/SS1 Due Date": "N/A",
+        "Maintenance Depot": "N/A",
+        "Manufactured By": "N/A",
         "Return Date": "N/A",
-        "Base Depot": "N/A"
+        "IOH/SS1 Location": "N/A",
+        "Extended Return Date": "N/A"
     }
 
     for attempt in range(max_retries):
@@ -216,17 +233,41 @@ def search_coach(driver, wait, coach_no, max_retries=3):
                 coach_data["Status"] = "Not Found"
                 return coach_data
 
+            # Wait for page to load completely - wait for any key element
+            WebDriverWait(driver, 5).until(
+                EC.presence_of_element_located((By.XPATH, "/html/body/div/div[3]/div[1]/div/div[1]/div[2]"))
+            )
+            time.sleep(1)  # Brief pause to ensure page is stable
+
             data_xpaths = [
-                ("/html/body/div/div[3]/div[1]/div/div[6]/div[4]", "Commission Date"),
-                ("/html/body/div/div[3]/div[2]/div/div[2]/div[4]", "Manufactured By"),
+                ("/html/body/div/div[3]/div[1]/div/div[1]/div[2]", "Coach Number"),
+                ("/html/body/div/div[3]/div[1]/div/div[2]/div[2]", "Base Depot"),
+                ("/html/body/div/div[3]/div[1]/div/div[3]/div[2]", "Coach Category"),
+                ("/html/body/div/div[3]/div[1]/div/div[4]/div[2]", "Fitness Type"),
+                ("/html/body/div/div[3]/div[1]/div/div[5]/div[2]", "Max Speed"),
+                ("/html/body/div/div[3]/div[1]/div/div[6]/div[2]", "Factory TurnOut Date"),
+                ("/html/body/div/div[3]/div[1]/div/div[2]/div[2]", "Base Depot"),
+                ("/html/body/div/div[3]/div[1]/div/div[1]/div[4]", "Coach Type"),
                 ("/html/body/div/div[3]/div[1]/div/div[2]/div[4]", "Built Date"),
-                ("/html/body/div/div[3]/div[2]/div/div[3]/div[4]", "Return Date"),
-                ("/html/body/div/div[3]/div[1]/div/div[2]/div[2]", "Base Depot")
+                ("/html/body/div/div[3]/div[1]/div/div[3]/div[4]", "Gauge"),
+                ("/html/body/div/div[3]/div[1]/div/div[4]/div[4]", "Coupling Type"),
+                ("/html/body/div/div[3]/div[1]/div/div[5]/div[4]", "Tare Weight"),
+                ("/html/body/div/div[3]/div[1]/div/div[6]/div[4]", "Commission Date(DD/MM/YYYY"),
+                ("/html/body/div/div[3]/div[2]/div/div[1]/div[2]", "Maintenance Zone"),
+                ("/html/body/div/div[3]/div[2]/div/div[2]/div[2]", "Last POH/SS2/SS3 Workshop"),
+                ("/html/body/div/div[3]/div[2]/div/div[3]/div[2]", "POH/SS2/SS3 Date"),
+                ("/html/body/div/div[3]/div[3]/div/div[4]/div[2]", "IOH/SS1 Date"),
+                ("/html/body/div/div[3]/div[2]/div/div[5]/div[2]", "Expected IOH/SS1 Due Date"),
+                ("/html/body/div/div[3]/div[2]/div/div[1]/div[4]", "Maintenance Depot"),
+                ("/html/body/div/div[3]/div[2]/div/div[2]/div[4]", "Manufactured By"),
+                ("/html/body/div/dev[3]/div[3]/div/div[3]/div[2]", "Return Date"),
+                ("/html/body/div/div[3]/div[3]/div/div[4]/div[2]", "IOH/SS1 Location"),
+                ("/html/body/div/div[3]/div[3]/div/div[5]/div[2]", "Extended Return Date")
             ]
 
             for xpath, label in data_xpaths:
                 try:
-                    data_element = WebDriverWait(driver, 10).until(
+                    data_element = WebDriverWait(driver, 3).until(
                         EC.presence_of_element_located((By.XPATH, xpath))
                     )
                     coach_data[label] = data_element.text.strip() if data_element.text.strip() else "N/A"
@@ -303,17 +344,35 @@ if __name__ == "__main__":
         print("-"*60)
 
         all_coach_data = []
+        start_time = time.time()  # Start timer
 
         for idx, coach_no in enumerate(coach_numbers, 1):
+            coach_start_time = time.time()  # Timer for individual coach
+            
             print(f"\n[{idx}/{len(coach_numbers)}] Processing coach: {coach_no}")
             coach_data = search_coach(driver, wait, coach_no)
             all_coach_data.append(coach_data)
+
+            coach_elapsed = time.time() - coach_start_time
+            print(f"  ⏱ Time taken: {coach_elapsed:.2f} seconds")
+
+            # Calculate and display progress statistics
+            elapsed_time = time.time() - start_time
+            avg_time_per_coach = elapsed_time / idx
+            remaining_coaches = len(coach_numbers) - idx
+            estimated_remaining = avg_time_per_coach * remaining_coaches
+            
+            print(f"  📊 Progress: {idx}/{len(coach_numbers)} ({(idx/len(coach_numbers)*100):.1f}%)")
+            print(f"  ⏰ Elapsed: {str(timedelta(seconds=int(elapsed_time)))}")
+            print(f"  🕐 Estimated remaining: {str(timedelta(seconds=int(estimated_remaining)))}")
 
             # Save progress every 50 coaches
             if idx % 50 == 0:
                 temp_df = pd.DataFrame(all_coach_data)
                 temp_df.to_excel('coach_data_progress.xlsx', index=False)
                 print(f"\n  💾 Progress saved: {idx} coaches processed")
+
+        total_time = time.time() - start_time  # Calculate total time
 
         # Save final results
         print("\n[5/5] Saving final results...")
@@ -328,6 +387,8 @@ if __name__ == "__main__":
         print(f"Successful: {len([c for c in all_coach_data if c.get('Status') == 'Success'])}")
         print(f"Not Found: {len([c for c in all_coach_data if c.get('Status') == 'Not Found'])}")
         print(f"Errors: {len([c for c in all_coach_data if c.get('Status', '').startswith('Error')])}")
+        print(f"\n⏱ TOTAL TIME TAKEN: {str(timedelta(seconds=int(total_time)))}")
+        print(f"⏱ Average time per coach: {total_time/len(all_coach_data):.2f} seconds")
         print(f"\n✓ Results saved to: coach_data.xlsx")
         print("="*60)
 

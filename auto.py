@@ -26,18 +26,7 @@ Yb,  88      `8b              `8,,8'             IP'`Yb                      8I 
      88                  a8P"Y88888P" P""Y8888PP88P     `Y8888P"Y888P"Y8888P"`Y88P'"Y88P"`Y88P'"Y88888P"Y888
 ''')
 
-# -------- Helper to find bundled resource --------
-def resource_path(relative_path):
-    """ Get absolute path to resource, works for development and PyInstaller """
-    try:
-        base_path = sys._MEIPASS  # PyInstaller temporary folder when bundled
-    except Exception:
-        base_path = os.path.abspath(".")
-
-    return os.path.join(base_path, relative_path)
-
 # -------- CONFIG ----------
-CHROMEDRIVER_PATH = resource_path("chromedriver.exe")
 LOGIN_URL = "https://roams.cris.org.in/uaa/login"
 USERNAME = "9004441529"
 PASSWORD = "PL@40028pl"
@@ -260,9 +249,9 @@ def search_coach(driver, wait, coach_no, max_retries=3):
                 ("/html/body/div/div[3]/div[2]/div/div[5]/div[2]", "Expected IOH/SS1 Due Date"),
                 ("/html/body/div/div[3]/div[2]/div/div[1]/div[4]", "Maintenance Depot"),
                 ("/html/body/div/div[3]/div[2]/div/div[2]/div[4]", "Manufactured By"),
-                ("/html/body/div/dev[3]/div[3]/div/div[3]/div[2]", "Return Date"),
-                ("/html/body/div/div[3]/div[3]/div/div[4]/div[2]", "IOH/SS1 Location"),
-                ("/html/body/div/div[3]/div[3]/div/div[5]/div[2]", "Extended Return Date")
+                ("/html/body/div/div[3]/div[2]/div/div[3]/div[4]", "Return Date"),
+                ("/html/body/div/div[3]/div[2]/div/div[4]/div[4]", "IOH/SS1 Location"),
+                ("/html/body/div/div[3]/div[2]/div/div[5]/div[4]", "Extended Return Date")
             ]
 
             for xpath, label in data_xpaths:
@@ -318,8 +307,7 @@ if __name__ == "__main__":
 
         # Initialize driver
         print("\n[1/5] Initializing Chrome WebDriver...")
-        service = Service(executable_path=CHROMEDRIVER_PATH)
-        driver = webdriver.Chrome(service=service)
+        driver = webdriver.Chrome()
         driver.maximize_window()
         print("✓ WebDriver initialized")
 

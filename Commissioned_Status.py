@@ -1,3 +1,25 @@
+import sys
+import subprocess
+import os
+import time
+from datetime import datetime, timedelta
+
+def install_dependencies():
+    packages = {
+        'pandas': 'pandas',
+        'selenium': 'selenium',
+        'openpyxl': 'openpyxl'
+    }
+    for module_name, package_name in packages.items():
+        try:
+            __import__(module_name)
+        except ImportError:
+            print(f"Installing missing dependency: {package_name}...")
+            subprocess.check_call([sys.executable, "-m", "pip", "install", package_name])
+
+# Run dependency check before importing third-party libraries
+install_dependencies()
+
 import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
@@ -6,10 +28,6 @@ from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.common.exceptions import TimeoutException, StaleElementReferenceException
-import time
-import sys
-import os
-from datetime import datetime, timedelta
 
 # -------- Intro of P-schedule --------------------
 
@@ -236,7 +254,9 @@ def search_coach(driver, wait, coach_no, max_retries=3):
                         lambda d: d.find_element(By.XPATH, coach_type_xpath).text.strip() != ""
                     )
                     
-                    # Extract extra fields
+                    # Extract extra fields with a shorter timeout (1 second).
+                    # This prevents the script from waiting 30 seconds if an optional field is missing.
+                    short_wait = WebDriverWait(driver, 1)
                     extra_xpaths = [
                         ("/html/body/div[1]/div[3]/form/table/tbody/tr/td[2]/div[1]/div/div/form/div[1]/table/tbody/tr[2]/td[1]", "Railway"),
                         ("/html/body/div[1]/div[3]/form/table/tbody/tr/td[2]/div[2]/div/div/form/table/tbody/tr[1]/td[2]", "Coach Type"),
@@ -260,7 +280,8 @@ def search_coach(driver, wait, coach_no, max_retries=3):
 
                     for xpath, label in extra_xpaths:
                         try:
-                            element = wait.until(EC.presence_of_element_located((By.XPATH, xpath)))
+                            # Use short_wait instead of the standard 30-second wait
+                            element = short_wait.until(EC.presence_of_element_located((By.XPATH, xpath)))
                             tag_name = element.tag_name.lower()
                             
                             if tag_name == "input":
